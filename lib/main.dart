@@ -1,6 +1,6 @@
-import 'package:campus_connect_app/view/splash.view.dart';
+import 'package:campus_connect_app/view/home.view.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 
 void main() {
   runApp(const App());
@@ -13,7 +13,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashView(),
+      home: HomeView(),
     );
   }
 }
