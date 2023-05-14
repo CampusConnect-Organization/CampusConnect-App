@@ -42,6 +42,7 @@ class Data {
   DateTime dateOfBirth;
   String address;
   String academics;
+  String profilePicture;
   bool isVerified;
   dynamic symbolNumber;
 
@@ -56,6 +57,7 @@ class Data {
     required this.address,
     required this.academics,
     required this.isVerified,
+    required this.profilePicture,
     this.symbolNumber,
   });
 
@@ -70,6 +72,7 @@ class Data {
       academics: json["academics"],
       isVerified: json["is_verified"],
       symbolNumber: json["symbol_number"],
+      profilePicture: json["profile_picture"],
       fullName: json["full_name"]);
 
   Map<String, dynamic> toJson() => {
@@ -84,6 +87,7 @@ class Data {
         "academics": academics,
         "is_verified": isVerified,
         "symbol_number": symbolNumber,
-        "full_name": fullName
+        "full_name": fullName,
+        "profile_picture": profilePicture
       };
 }

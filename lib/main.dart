@@ -1,4 +1,4 @@
-import 'package:campus_connect_app/view/home.view.dart';
+import 'package:campus_connect_app/view/profile.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -13,7 +13,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeView(),
+      defaultTransition: Transition.fade,
+      home: UserProfileView(),
     );
   }
 }
