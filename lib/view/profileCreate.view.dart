@@ -8,15 +8,15 @@ import 'package:campus_connect_app/services/profile.service.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/home.view.dart';
-import 'package:campus_connect_app/view/widgets/button.global.dart';
-import 'package:campus_connect_app/view/widgets/text.form.global.dart';
+import 'package:campus_connect_app/widgets/button.global.dart';
+import 'package:campus_connect_app/widgets/text.form.global.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-import '../utils/constants.dart';
+import 'package:campus_connect_app/utils/constants.dart';
 
 class ProfileCreateView extends StatefulWidget {
   const ProfileCreateView({super.key});

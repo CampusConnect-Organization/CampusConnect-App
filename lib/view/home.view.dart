@@ -10,7 +10,7 @@ import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:campus_connect_app/view/profile.view.dart';
 import 'package:campus_connect_app/view/profileCreate.view.dart';
-import 'package:campus_connect_app/view/widgets/button.home.dart';
+import 'package:campus_connect_app/widgets/button.home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campus_connect_app/models/profile.model.dart';

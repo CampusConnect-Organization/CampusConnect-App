@@ -10,6 +10,7 @@ class TextFormGlobal extends StatelessWidget {
     required this.labelText,
     this.onTap,
   });
+
   final TextEditingController controller;
   final String text;
   final TextInputType textInputType;

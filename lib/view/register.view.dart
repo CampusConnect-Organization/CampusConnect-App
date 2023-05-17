@@ -2,8 +2,8 @@ import 'package:campus_connect_app/models/authentication.models.dart';
 import 'package:campus_connect_app/services/register.service.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/login.view.dart';
-import 'package:campus_connect_app/view/widgets/button.global.dart';
-import 'package:campus_connect_app/view/widgets/text.form.global.dart';
+import 'package:campus_connect_app/widgets/button.global.dart';
+import 'package:campus_connect_app/widgets/text.form.global.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
