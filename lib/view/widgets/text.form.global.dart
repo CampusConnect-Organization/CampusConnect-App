@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TextFormGlobal extends StatelessWidget {
-  TextFormGlobal({
+  const TextFormGlobal({
     super.key,
     required this.controller,
     required this.text,
@@ -15,7 +15,7 @@ class TextFormGlobal extends StatelessWidget {
   final TextInputType textInputType;
   final bool obscure;
   final String labelText;
-  Function()? onTap;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {

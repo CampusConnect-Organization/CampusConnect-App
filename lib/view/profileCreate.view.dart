@@ -74,13 +74,6 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
       appBar: AppBar(
         title: const Text("Create Profile"),
         centerTitle: true,
-        leading: const IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-          onPressed: null,
-        ),
         backgroundColor: GlobalColors.mainColor,
         foregroundColor: Colors.white,
       ),
