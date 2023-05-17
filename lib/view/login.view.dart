@@ -78,6 +78,7 @@ class _LoginViewState extends State<LoginView> {
                   TextFormGlobal(
                     controller: usernameController,
                     obscure: false,
+                    labelText: "Username",
                     text: 'Username',
                     textInputType: TextInputType.text,
                   ),
@@ -89,6 +90,7 @@ class _LoginViewState extends State<LoginView> {
                     controller: passwordController,
                     obscure: true,
                     text: 'Password',
+                    labelText: "Password",
                     textInputType: TextInputType.text,
                   ),
                   const SizedBox(
@@ -110,7 +112,7 @@ class _LoginViewState extends State<LoginView> {
                                 "accessToken", model.data.accessToken);
                             await pref.setString(
                                 "refreshToken", model.data.refreshToken);
-                            Get.to(() => const HomeView());
+                            Get.off(() => const HomeView());
                             generateSuccessSnackbar("Success", model.message);
                           }
                         } else if (result is Errors) {
@@ -144,7 +146,7 @@ class _LoginViewState extends State<LoginView> {
             const Text("Don't have an account?"),
             InkWell(
               onTap: () {
-                Get.to(() => const RegisterView());
+                Get.off(() => const RegisterView());
               },
               child: Text(
                 " Signup",

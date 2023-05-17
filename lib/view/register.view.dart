@@ -70,6 +70,7 @@ class _RegisterViewState extends State<RegisterView> {
                       height: 20,
                     ),
                     TextFormGlobal(
+                      labelText: "Username",
                       controller: usernameController,
                       obscure: false,
                       text: 'Username',
@@ -81,6 +82,7 @@ class _RegisterViewState extends State<RegisterView> {
                     ),
                     // Email Address
                     TextFormGlobal(
+                      labelText: "Email",
                       controller: emailController,
                       obscure: false,
                       text: 'Email',
@@ -91,6 +93,7 @@ class _RegisterViewState extends State<RegisterView> {
                       height: 20,
                     ),
                     TextFormGlobal(
+                      labelText: "Password",
                       controller: passwordController,
                       obscure: true,
                       text: 'Password',
@@ -113,7 +116,7 @@ class _RegisterViewState extends State<RegisterView> {
                             if (result is Authentication) {
                               model = result;
                               if (model.success) {
-                                Get.to(() => const LoginView());
+                                Get.off(() => const LoginView());
                                 generateSuccessSnackbar(
                                     "Success", model.message);
                               }
@@ -147,7 +150,7 @@ class _RegisterViewState extends State<RegisterView> {
             const Text("Already have an account?"),
             InkWell(
               onTap: () {
-                Get.to(() => const LoginView());
+                Get.off(() => const LoginView());
               },
               child: Text(
                 "Login",

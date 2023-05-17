@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 
 class TextFormGlobal extends StatelessWidget {
-  const TextFormGlobal(
-      {super.key,
-      required this.controller,
-      required this.text,
-      required this.textInputType,
-      required this.obscure});
+  TextFormGlobal({
+    super.key,
+    required this.controller,
+    required this.text,
+    required this.textInputType,
+    required this.obscure,
+    required this.labelText,
+    this.onTap,
+  });
   final TextEditingController controller;
   final String text;
   final TextInputType textInputType;
   final bool obscure;
+  final String labelText;
+  Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +38,10 @@ class TextFormGlobal extends StatelessWidget {
         decoration: InputDecoration(
             hintText: text,
             border: InputBorder.none,
+            labelText: labelText,
             contentPadding: const EdgeInsets.all(0),
             hintStyle: const TextStyle(height: 1)),
+        onTap: onTap ?? null,
       ),
     );
   }

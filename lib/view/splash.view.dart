@@ -12,15 +12,15 @@ class SplashView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Timer(const Duration(seconds: 2), () {
-      Get.to(() => const LoginView());
+      Get.off(() => const LoginView());
     });
     return Center(
       child: Scaffold(
         backgroundColor: GlobalColors.mainColor,
-        body: Center(
+        body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Image(
                 image: AssetImage("images/logo.png"),
                 height: 150,

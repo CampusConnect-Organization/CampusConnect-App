@@ -34,21 +34,20 @@ class Profile {
 
 class Data {
   int id;
-  String fullName;
+  dynamic fullName;
   String firstName;
   String lastName;
   String phone;
   String gender;
-  DateTime dateOfBirth;
+  String dateOfBirth;
   String address;
   String academics;
-  String profilePicture;
+  String? profilePicture;
   bool isVerified;
   dynamic symbolNumber;
 
   Data({
     required this.id,
-    required this.fullName,
     required this.firstName,
     required this.lastName,
     required this.phone,
@@ -57,7 +56,8 @@ class Data {
     required this.address,
     required this.academics,
     required this.isVerified,
-    required this.profilePicture,
+    this.profilePicture,
+    this.fullName,
     this.symbolNumber,
   });
 
@@ -67,7 +67,7 @@ class Data {
       lastName: json["last_name"],
       phone: json["phone"],
       gender: json["gender"],
-      dateOfBirth: DateTime.parse(json["date_of_birth"]),
+      dateOfBirth: json["date_of_birth"],
       address: json["address"],
       academics: json["academics"],
       isVerified: json["is_verified"],
@@ -81,8 +81,7 @@ class Data {
         "last_name": lastName,
         "phone": phone,
         "gender": gender,
-        "date_of_birth":
-            "${dateOfBirth.year.toString().padLeft(4, '0')}-${dateOfBirth.month.toString().padLeft(2, '0')}-${dateOfBirth.day.toString().padLeft(2, '0')}",
+        "date_of_birth": dateOfBirth,
         "address": address,
         "academics": academics,
         "is_verified": isVerified,

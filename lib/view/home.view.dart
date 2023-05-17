@@ -9,6 +9,7 @@ import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:campus_connect_app/view/profile.view.dart';
+import 'package:campus_connect_app/view/profileCreate.view.dart';
 import 'package:campus_connect_app/view/widgets/button.home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +30,7 @@ class HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _fetchProfile();
+    Timer(const Duration(seconds: 1), _fetchProfile);
   }
 
   Future<void> _fetchProfile() async {
@@ -39,7 +40,7 @@ class HomeViewState extends State<HomeView> {
         _profile = profile;
       });
     } else {
-      print("Profile doesn't exist!");
+      Get.off(() => const ProfileCreateView());
     }
   }
 
@@ -81,7 +82,7 @@ class HomeViewState extends State<HomeView> {
                     : const Text(""),
                 currentAccountPicture: CircleAvatar(
                   foregroundImage: NetworkImage(_profile != null
-                      ? ApiConstants.baseUrl + _profile!.data.profilePicture
+                      ? ApiConstants.baseUrl + _profile!.data.profilePicture!
                       : ""),
                 ),
               ),
@@ -113,7 +114,7 @@ class HomeViewState extends State<HomeView> {
                   pref.remove("accessToken");
                   showConfirmationDialog("Are you sure you want to logout?",
                       () {
-                    Get.to(() => const LoginView());
+                    Get.off(() => const LoginView());
                     generateSuccessSnackbar(
                         "Success", "Logged out successfully!");
                   });

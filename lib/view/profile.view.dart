@@ -34,7 +34,7 @@ class _UserProfileViewState extends State<UserProfileView> {
         _profile = profile;
       });
     } else {
-      Get.to(() => const LoginView());
+      Get.off(() => const LoginView());
     }
   }
 
@@ -46,7 +46,7 @@ class _UserProfileViewState extends State<UserProfileView> {
         centerTitle: true,
         leading: IconButton(
           onPressed: () {
-            Get.to(const HomeView());
+            Get.off(const HomeView());
           },
           icon: const Icon(Icons.arrow_back),
         ),
@@ -74,7 +74,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                         CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(ApiConstants.baseUrl +
-                              _profile!.data.profilePicture),
+                              _profile!.data.profilePicture!),
                         ),
                         Positioned(
                             bottom: 0,
@@ -149,7 +149,7 @@ class _UserProfileViewState extends State<UserProfileView> {
                                       color: Colors.grey),
                                   const SizedBox(width: 10),
                                   Text(
-                                    "${_profile!.data.dateOfBirth.year.toString()}-${_profile!.data.dateOfBirth.month.toString()}-${_profile!.data.dateOfBirth.day.toString()}",
+                                    _profile!.data.dateOfBirth,
                                     style: const TextStyle(fontSize: 16),
                                   ),
                                 ],

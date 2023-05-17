@@ -1,4 +1,4 @@
-import 'package:campus_connect_app/view/profile.view.dart';
+import 'package:campus_connect_app/view/splash.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,7 @@ class App extends StatelessWidget {
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.fade,
-      home: UserProfileView(),
+      home: SplashView(),
     );
   }
 }
