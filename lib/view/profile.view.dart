@@ -188,6 +188,17 @@ class _UserProfileViewState extends State<UserProfileView> {
                                   ),
                                 ],
                               ),
+                              const SizedBox(height: 30),
+                              Row(
+                                children: [
+                                  const Icon(Icons.school, color: Colors.grey),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    "${_profile!.data.semester} Semester",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),

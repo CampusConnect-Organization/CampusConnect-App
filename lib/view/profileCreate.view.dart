@@ -32,7 +32,18 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
   DateTime selectedDate = DateTime.now();
   File? image;
   List<String> options = ['male', 'female', 'other'];
+  List<String> semesterOptions = [
+    '1st',
+    '2nd',
+    '3rd',
+    '4th',
+    '5th',
+    '6th',
+    '7th',
+    '8th'
+  ];
   String? selectedOption;
+  String? selectedSemester;
   final TextEditingController firstNameController = TextEditingController();
   final TextEditingController lastNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -132,7 +143,7 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
                 ),
                 DropdownButtonFormField(
                   decoration: InputDecoration(
-                    hintText: 'Select an option',
+                    hintText: 'Select your gender',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(6),
                     ),
@@ -189,6 +200,31 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
                 const SizedBox(
                   height: 20,
                 ),
+                DropdownButtonFormField(
+                  decoration: InputDecoration(
+                    hintText: 'Select your semester',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    contentPadding: const EdgeInsets.only(top: 3, left: 14),
+                  ),
+                  value: selectedSemester,
+                  onChanged: (value) {
+                    setState(() {
+                      selectedSemester = value;
+                    });
+                  },
+                  items: semesterOptions
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 ButtonGlobal(
                     text: "Submit",
                     onTap: () async {
@@ -207,6 +243,7 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
                           firstNameController.text,
                           lastNameController.text,
                           academicsController.text,
+                          selectedSemester!,
                           image!,
                         );
 

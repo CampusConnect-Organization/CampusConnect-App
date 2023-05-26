@@ -1,8 +1,11 @@
 class ApiConstants {
-  static String baseUrl = 'http://192.168.1.71:8000/';
+  static String baseUrl = 'http://192.168.1.68:8000/';
   static String loginEndpoint = 'api/auth/login/';
   static String registerEndpoint = 'api/auth/register/';
   static String profileEndpoint = "api/student-profile/";
+  static String coursesEndpoint = "api/courses/courses/";
+  static String courseSessionsEndpoint = "api/courses/sessions/";
+  static String courseEnrollmentsEndpoint = "api/courses/enrollments/";
 }
 
 String titleCase(String input) {

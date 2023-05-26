@@ -7,6 +7,7 @@ import 'package:campus_connect_app/utils/constants.dart';
 import 'package:campus_connect_app/utils/dialog.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
+import 'package:campus_connect_app/view/course.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:campus_connect_app/view/profile.view.dart';
 import 'package:campus_connect_app/view/profileCreate.view.dart';
@@ -143,7 +144,9 @@ class HomeViewState extends State<HomeView> {
                     HomeButtons(
                       text: "Courses",
                       icon: Icons.book_rounded,
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(() => const CourseView());
+                      },
                     ),
                     const SizedBox(
                       height: 20,

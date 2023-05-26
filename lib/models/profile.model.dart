@@ -45,6 +45,7 @@ class Data {
   String? profilePicture;
   bool isVerified;
   dynamic symbolNumber;
+  String semester;
 
   Data({
     required this.id,
@@ -59,6 +60,7 @@ class Data {
     this.profilePicture,
     this.fullName,
     this.symbolNumber,
+    required this.semester,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -73,7 +75,8 @@ class Data {
       isVerified: json["is_verified"],
       symbolNumber: json["symbol_number"],
       profilePicture: json["profile_picture"],
-      fullName: json["full_name"]);
+      fullName: json["full_name"],
+      semester: json["semester"]);
 
   Map<String, dynamic> toJson() => {
         "id": id,
@@ -87,6 +90,7 @@ class Data {
         "is_verified": isVerified,
         "symbol_number": symbolNumber,
         "full_name": fullName,
-        "profile_picture": profilePicture
+        "profile_picture": profilePicture,
+        "semester": semester
       };
 }
