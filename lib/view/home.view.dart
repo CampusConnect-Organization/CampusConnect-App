@@ -9,9 +9,10 @@ import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/course.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
+import 'package:campus_connect_app/widgets/profile.widget.dart';
+import 'package:flutter/services.dart';
 import 'package:campus_connect_app/view/profile.view.dart';
 import 'package:campus_connect_app/view/profileCreate.view.dart';
-import 'package:campus_connect_app/widgets/button.home.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:campus_connect_app/models/profile.model.dart';
@@ -31,10 +32,10 @@ class HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    Timer(const Duration(seconds: 1), _fetchProfile);
+    fetchProfile();
   }
 
-  Future<void> _fetchProfile() async {
+  Future<void> fetchProfile() async {
     final profile = await ProfileAPIService().getProfile();
     if (profile is Profile) {
       setState(() {
@@ -49,128 +50,118 @@ class HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(builder: (context) {
-          return IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-          );
-        }),
         title: const Text("Dashboard"),
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications),
-            onPressed: () {},
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              SharedPreferences pref = await prefs;
+
+              showConfirmationDialog("Are you sure you want to logout?", () {
+                pref.remove("accessToken");
+                Get.off(() => const LoginView());
+                generateSuccessSnackbar("Success", "Logged out successfully!");
+              });
+            },
           ),
         ],
         elevation: 0,
         centerTitle: true,
         backgroundColor: GlobalColors.mainColor,
       ),
-      drawer: Visibility(
-        visible: _profile != null,
-        child: Drawer(
-          child: ListView(
-            children: [
-              UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: GlobalColors.mainColor),
-                accountName: _profile != null
-                    ? Text(_profile!.data.fullName)
-                    : const Text(""),
-                accountEmail: _profile != null
-                    ? Text(_profile!.data.phone)
-                    : const Text(""),
-                currentAccountPicture: CircleAvatar(
-                  foregroundImage: NetworkImage(_profile != null
-                      ? ApiConstants.baseUrl + _profile!.data.profilePicture!
-                      : ""),
-                ),
-              ),
-              const ListTile(
-                leading: Icon(Icons.home),
-                title: Text("Home"),
-              ),
-              const ListTile(
-                leading: Icon(Icons.book_rounded),
-                title: Text("Courses"),
-              ),
-              const ListTile(
-                leading: Icon(Icons.person),
-                title: Text("Profile"),
-              ),
-              const ListTile(
-                leading: Icon(Icons.percent),
-                title: Text("Grades"),
-              ),
-              const ListTile(
-                leading: Icon(Icons.library_books),
-                title: Text("Library"),
-              ),
-              ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text("Logout"),
-                onTap: () async {
-                  SharedPreferences pref = await prefs;
-                  pref.remove("accessToken");
-                  showConfirmationDialog("Are you sure you want to logout?",
-                      () {
-                    Get.off(() => const LoginView());
-                    generateSuccessSnackbar(
-                        "Success", "Logged out successfully!");
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      body: Center(
+      body: WillPopScope(
+        onWillPop: () => _onBackButtonPressed(context),
         child: _profile != null
             ? Container(
-                padding: const EdgeInsets.only(top: 150.0),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10.0,
+                  horizontal: 10.0,
+                ),
+                height: MediaQuery.of(context).size.height,
+                color: Colors.grey.shade300,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    HomeButtons(
-                      text: "Profile",
-                      icon: Icons.person,
-                      onPressed: () {
-                        Get.to(() => const UserProfileView());
-                      },
+                    Container(
+                      height: 140,
+                      color: Colors.transparent,
+                      child: ProfileWidget(
+                          firstName: _profile!.data.firstName,
+                          profilePicture: _profile!.data.profilePicture!),
                     ),
-                    const SizedBox(
-                      height: 20,
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          getExpanded("profile", "Profile", "View Profile", () {
+                            Get.off(() => const UserProfileView());
+                          }),
+                          getExpanded("courses", "Courses", "View Courses", () {
+                            Get.off(() => const CourseView());
+                          }),
+                        ],
+                      ),
                     ),
-                    HomeButtons(
-                      text: "Courses",
-                      icon: Icons.book_rounded,
-                      onPressed: () {
-                        Get.to(() => const CourseView());
-                      },
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          getExpanded("grade", "Grades", "View Grades", null),
+                          getExpanded(
+                              "library", "Library", "Access Library", null),
+                        ],
+                      ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    HomeButtons(
-                      text: "Grades",
-                      icon: Icons.percent,
-                      onPressed: () {},
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    HomeButtons(
-                      text: "Library",
-                      icon: Icons.library_books,
-                      onPressed: () {},
+                    Expanded(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          getExpanded("exam", "Exams", "View Exams", null),
+                          getExpanded(
+                              "calendar", "Calendar", "View Calendar", null),
+                        ],
+                      ),
                     )
                   ],
                 ),
               )
-            : CircularProgressIndicator(
-                color: GlobalColors.mainColor,
+            : Center(
+                child: CircularProgressIndicator(
+                  color: GlobalColors.mainColor,
+                ),
               ),
       ),
     );
+  }
+
+  _onBackButtonPressed(BuildContext context) async {
+    bool exitApp = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("Confirmation"),
+            content: const Text("Do you want to close the app?"),
+            actions: <Widget>[
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                  child: const Text(
+                    "No",
+                    style: TextStyle(color: Colors.red),
+                  )),
+              TextButton(
+                onPressed: () {
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                },
+                child: const Text(
+                  "Yes",
+                ),
+              ),
+            ],
+          );
+        });
+
+    return exitApp;
   }
 }
