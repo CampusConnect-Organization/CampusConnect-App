@@ -19,7 +19,10 @@ void showConfirmationDialog(String text, Function() func) {
       onPressed: () {
         Get.back();
       },
-      child: const Text('No'),
+      child: const Text(
+        'No',
+        style: TextStyle(color: Colors.red),
+      ),
     ),
   );
 }

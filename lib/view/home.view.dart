@@ -32,7 +32,7 @@ class HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    fetchProfile();
+    Timer(const Duration(seconds: 1), fetchProfile);
   }
 
   Future<void> fetchProfile() async {
@@ -59,7 +59,7 @@ class HomeViewState extends State<HomeView> {
 
               showConfirmationDialog("Are you sure you want to logout?", () {
                 pref.remove("accessToken");
-                Get.off(() => const LoginView());
+                Get.offAll(() => const LoginView());
                 generateSuccessSnackbar("Success", "Logged out successfully!");
               });
             },
