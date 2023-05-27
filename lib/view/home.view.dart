@@ -7,7 +7,9 @@ import 'package:campus_connect_app/utils/constants.dart';
 import 'package:campus_connect_app/utils/dialog.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
+import 'package:campus_connect_app/view/calendar.view.dart';
 import 'package:campus_connect_app/view/course.view.dart';
+import 'package:campus_connect_app/view/exam.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:campus_connect_app/widgets/profile.widget.dart';
 import 'package:flutter/services.dart';
@@ -107,8 +109,9 @@ class HomeViewState extends State<HomeView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           getExpanded("grade", "Grades", "View Grades", null),
-                          getExpanded(
-                              "library", "Library", "Access Library", null),
+                          getExpanded("exam", "Exams", "View Exams", () {
+                            Get.to(() => const ExamView());
+                          }),
                         ],
                       ),
                     ),
@@ -116,9 +119,12 @@ class HomeViewState extends State<HomeView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          getExpanded("exam", "Exams", "View Exams", null),
                           getExpanded(
-                              "calendar", "Calendar", "View Calendar", null),
+                              "library", "Library", "Access Library", null),
+                          getExpanded("calendar", "Calendar", "View Calendar",
+                              () {
+                            Get.to(() => const CalendarView());
+                          }),
                         ],
                       ),
                     )

@@ -9,6 +9,7 @@ class ApiConstants {
   static String courseSessionsEndpoint = "api/courses/sessions/";
   static String studentCoursesEndpoint = "api/courses/student-courses/";
   static String courseEnrollmentsEndpoint = "api/courses/enrollments/";
+  static String examsEndpoint = "api/grades/exams/";
 }
 
 String titleCase(String input) {

@@ -52,6 +52,18 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController academicsController = TextEditingController();
 
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    phoneController.dispose();
+    genderController.dispose();
+    dateController.dispose();
+    addressController.dispose();
+    academicsController.dispose();
+    super.dispose();
+  }
+
   Future pickImage() async {
     try {
       final pickedImage =
