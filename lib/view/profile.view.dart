@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class UserProfileView extends StatefulWidget {
-  const UserProfileView({super.key});
+  const UserProfileView({Key? key}) : super(key: key);
 
   @override
   State<UserProfileView> createState() => _UserProfileViewState();
@@ -20,6 +20,7 @@ class UserProfileView extends StatefulWidget {
 
 class _UserProfileViewState extends State<UserProfileView> {
   Profile? _profile;
+  bool _isRefreshing = false;
 
   @override
   void initState() {
@@ -38,6 +39,18 @@ class _UserProfileViewState extends State<UserProfileView> {
     }
   }
 
+  Future<void> _refreshProfile() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    await _fetchProfile();
+
+    setState(() {
+      _isRefreshing = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,31 +65,34 @@ class _UserProfileViewState extends State<UserProfileView> {
         ),
         actions: const [
           IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.notifications,
-                color: Colors.white,
-              ))
+            onPressed: null,
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
+          )
         ],
         backgroundColor: GlobalColors.mainColor,
         foregroundColor: Colors.white,
       ),
-      body: _profile != null
-          ? SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 50),
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Stack(children: [
-                        CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(ApiConstants.baseUrl +
-                              _profile!.data.profilePicture!),
-                        ),
-                        Positioned(
+      body: RefreshIndicator(
+        onRefresh: _refreshProfile,
+        child: _profile != null
+            ? SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 50),
+                child: Container(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Stack(children: [
+                          CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(ApiConstants.baseUrl +
+                                _profile!.data.profilePicture!),
+                          ),
+                          Positioned(
                             bottom: 0,
                             right: 0,
                             child: Container(
@@ -93,125 +109,136 @@ class _UserProfileViewState extends State<UserProfileView> {
                                     : Colors.red,
                                 size: 30,
                               ),
-                            ))
-                      ]),
-                      const SizedBox(height: 20),
-                      Text(
-                        _profile!.data.fullName,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.phone,
-                            color: Colors.grey,
-                            size: 15,
-                          ),
-                          const SizedBox(
-                            width: 5,
-                          ),
-                          Text(
-                            _profile!.data.phone,
-                            style: const TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Card(
-                        elevation: 20,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const Icon(Icons.person, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    titleCase(_profile!.data.gender),
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Row(
-                                children: [
-                                  const Icon(Icons.date_range,
-                                      color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _profile!.data.dateOfBirth,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Row(
-                                children: [
-                                  const Icon(Icons.location_on,
-                                      color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _profile!.data.address,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Row(
-                                children: [
-                                  const Icon(Icons.numbers, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _profile!.data.symbolNumber ?? "None",
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Row(
-                                children: [
-                                  const Icon(Icons.book, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    _profile!.data.academics,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Row(
-                                children: [
-                                  const Icon(Icons.school, color: Colors.grey),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    "${_profile!.data.semester} Semester",
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                ],
-                              ),
-                            ],
+                            ),
+                          )
+                        ]),
+                        const SizedBox(height: 20),
+                        Text(
+                          _profile!.data.fullName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      )
-                    ],
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.phone,
+                              color: Colors.grey,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              _profile!.data.phone,
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Card(
+                          elevation: 20,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.person,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      titleCase(_profile!.data.gender),
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.date_range,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _profile!.data.dateOfBirth,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.location_on,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _profile!.data.address,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.numbers,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _profile!.data.symbolNumber ?? "None",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.book, color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      _profile!.data.academics,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.school,
+                                        color: Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      "${_profile!.data.semester} Semester",
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
+              )
+            : Center(
+                child: _isRefreshing
+                    ? CircularProgressIndicator(
+                        color: GlobalColors.mainColor,
+                      )
+                    : const Text(
+                        'Failed to fetch profile data.',
+                        style: TextStyle(color: Colors.red),
+                      ),
               ),
-            )
-          : Center(
-              child: CircularProgressIndicator(
-              color: GlobalColors.mainColor,
-            )),
+      ),
     );
   }
 }

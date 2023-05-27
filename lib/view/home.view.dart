@@ -96,10 +96,10 @@ class HomeViewState extends State<HomeView> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           getExpanded("profile", "Profile", "View Profile", () {
-                            Get.off(() => const UserProfileView());
+                            Get.to(() => const UserProfileView());
                           }),
                           getExpanded("courses", "Courses", "View Courses", () {
-                            Get.off(() => const CourseView());
+                            Get.to(() => const CourseView());
                           }),
                         ],
                       ),

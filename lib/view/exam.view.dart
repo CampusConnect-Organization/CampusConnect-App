@@ -1,22 +1,24 @@
+import 'package:campus_connect_app/widgets/greyText.widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/models/exam.model.dart';
 import 'package:campus_connect_app/services/exam.service.dart';
 import 'package:campus_connect_app/utils/constants.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/view/home.view.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ExamView extends StatefulWidget {
-  const ExamView({super.key});
+  const ExamView({Key? key}) : super(key: key);
 
   @override
-  State<ExamView> createState() => _ExamViewState();
+  _ExamViewState createState() => _ExamViewState();
 }
 
 class _ExamViewState extends State<ExamView> {
   Exams? exams;
   Errors? errors;
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -25,55 +27,74 @@ class _ExamViewState extends State<ExamView> {
   }
 
   Future<void> fetchExams() async {
+    setState(() {
+      isRefreshing = true;
+    });
+
     dynamic data = await ExamAPIService().getExams();
+
     if (data is Exams) {
       setState(() {
         exams = data;
+        isRefreshing = false;
       });
     } else if (data is Errors) {
-      errors = data;
+      setState(() {
+        errors = data;
+        isRefreshing = false;
+      });
     }
+  }
+
+  Future<void> refreshData() async {
+    await fetchExams();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Upcoming Exams"),
-          centerTitle: true,
-          backgroundColor: GlobalColors.mainColor,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Get.off(() => const HomeView());
-            },
-          ),
-          actions: const [
-            IconButton(
-                onPressed: null,
-                icon: Icon(
-                  Icons.notifications,
-                  color: Colors.white,
-                ))
-          ],
+      appBar: AppBar(
+        title: const Text("Upcoming Exams"),
+        centerTitle: true,
+        backgroundColor: GlobalColors.mainColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.off(() => const HomeView());
+          },
         ),
-        body: exams != null
-            ? SingleChildScrollView(
+        actions: const [
+          IconButton(
+            onPressed: null,
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+      body: exams != null
+          ? RefreshIndicator(
+              onRefresh: refreshData,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: exams!.data.length,
-                  itemBuilder: ((context, index) {
+                  itemBuilder: (context, index) {
                     List<Datum>? examList = exams?.data;
                     var currentItem = examList?[index];
 
                     return Container(
                       decoration: const BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                        color: Colors.grey,
-                        width: 1.0,
-                      ))),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey,
+                            width: 1.0,
+                          ),
+                        ),
+                      ),
                       margin: const EdgeInsets.all(15.0),
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -87,57 +108,41 @@ class _ExamViewState extends State<ExamView> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Exam Date: ${currentItem.date}",
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                          GreyText(text: "Exam Date: ${currentItem.date}"),
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Exam Type: ${titleCase(currentItem.examType)}",
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                          GreyText(
+                              text:
+                                  "Exam Type: ${titleCase(currentItem.examType)}"),
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Exam Time: ${currentItem.time}",
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                          GreyText(text: "Exam Time: ${currentItem.time}"),
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Full Marks: ${currentItem.totalMarks}",
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
+                          GreyText(
+                              text: "Full Marks: ${currentItem.totalMarks}"),
                           const SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            "Pass Marks: ${currentItem.passMarks}",
-                            style: const TextStyle(
-                              color: Colors.grey,
-                            ),
-                          )
+                          GreyText(
+                              text: "Pass Marks: ${currentItem.passMarks}"),
                         ],
                       ),
                     );
-                  }),
+                  },
                 ),
-              )
-            : Center(
-                child: CircularProgressIndicator(
-                color: GlobalColors.mainColor,
-              )));
+              ),
+            )
+          : Center(
+              child: isRefreshing
+                  ? CircularProgressIndicator(
+                      color: GlobalColors.mainColor,
+                    )
+                  : const Text("Failed to fetch exams."),
+            ),
+    );
   }
 }

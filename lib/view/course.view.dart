@@ -1,13 +1,14 @@
+import 'package:campus_connect_app/widgets/greyText.widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/models/course.enrollments.model.dart';
 import 'package:campus_connect_app/models/student.courses.model.dart';
 import 'package:campus_connect_app/models/course.session.model.dart';
 import 'package:campus_connect_app/models/courses.model.dart';
-import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/services/course.service.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/view/home.view.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class CourseView extends StatefulWidget {
   const CourseView({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _CourseViewState extends State<CourseView>
   StudentCourses? studentCourses;
   CourseEnrollments? enrollments;
   late TabController _tabController;
+  bool isRefreshing = false;
 
   @override
   void initState() {
@@ -42,46 +44,70 @@ class _CourseViewState extends State<CourseView>
   }
 
   Future<dynamic> fetchCourses() async {
+    setState(() {
+      isRefreshing = true;
+    });
+
     dynamic data = await CourseAPIService().getCourses();
     if (data is Courses) {
       setState(() {
         courses = data;
+        isRefreshing = false;
       });
     } else if (data is Errors) {
       errors = data;
+      isRefreshing = false;
     }
   }
 
   Future<dynamic> fetchEnrollments() async {
+    setState(() {
+      isRefreshing = true;
+    });
+
     dynamic data = await CourseAPIService().getCourseEnrollments();
     if (data is CourseEnrollments) {
       setState(() {
         enrollments = data;
+        isRefreshing = false;
       });
     } else if (data is Errors) {
       errors = data;
+      isRefreshing = false;
     }
   }
 
   Future<dynamic> fetchCourseSessions() async {
+    setState(() {
+      isRefreshing = true;
+    });
+
     dynamic data = await CourseAPIService().getCourseSessions();
     if (data is CourseSessions) {
       setState(() {
         courseSessions = data;
+        isRefreshing = false;
       });
     } else if (data is Errors) {
       errors = data;
+      isRefreshing = false;
     }
   }
 
   Future<dynamic> fetchStudentCourses() async {
+    setState(() {
+      isRefreshing = true;
+    });
+
     dynamic data = await CourseAPIService().getStudentCourses();
     if (data is StudentCourses) {
       setState(() {
         studentCourses = data;
+        isRefreshing = false;
       });
     } else if (data is Errors) {
       errors = data;
+      isRefreshing = false;
     }
   }
 
@@ -107,6 +133,15 @@ class _CourseViewState extends State<CourseView>
     }
 
     return sortedGroupedCourses;
+  }
+
+  Future<void> refreshData() async {
+    await Future.wait([
+      fetchCourses(),
+      fetchCourseSessions(),
+      fetchStudentCourses(),
+      fetchEnrollments(),
+    ]);
   }
 
   @override
@@ -143,195 +178,185 @@ class _CourseViewState extends State<CourseView>
       body: TabBarView(
         controller: _tabController,
         children: [
-          courses != null
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: groupedCourses.length,
-                        itemBuilder: (context, index) {
-                          String semester = groupedCourses.keys.toList()[index];
-                          List<Datum> semesterCourses =
-                              groupedCourses[semester]!;
+          RefreshIndicator(
+            onRefresh: refreshData,
+            child: courses != null
+                ? ListView.builder(
+                    itemCount: groupedCourses.length,
+                    itemBuilder: (context, index) {
+                      String semester = groupedCourses.keys.toList()[index];
+                      List<Datum> semesterCourses = groupedCourses[semester]!;
 
-                          return ExpansionTile(
-                            title: Text(
-                              "$semester Semester",
-                            ),
-                            children: semesterCourses
-                                .map((course) => ListTile(
-                                      title: Text(course.title),
-                                      subtitle: Text(
-                                          "Course Code: ${course.courseCode}"),
-                                    ))
-                                .toList(),
-                          );
-                        },
+                      return ExpansionTile(
+                        title: Text(
+                          "$semester Semester",
+                        ),
+                        children: semesterCourses
+                            .map((course) => ListTile(
+                                  title: Text(course.title),
+                                  subtitle:
+                                      Text("Course Code: ${course.courseCode}"),
+                                ))
+                            .toList(),
+                      );
+                    },
+                  )
+                : isRefreshing
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: GlobalColors.mainColor,
+                        ),
+                      )
+                    : Center(
+                        child: Text("Failed to fetch courses."),
                       ),
-                    ),
-                  ],
-                )
-              : Center(
-                  child:
-                      CircularProgressIndicator(color: GlobalColors.mainColor),
-                ),
+          ),
           // Placeholder for "Classes" tab content
-          courseSessions != null
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: courseSessions?.data.length,
-                        itemBuilder: (context, index) {
-                          List<Datumm>? sessions = courseSessions?.data;
-                          var currentItem = sessions?[index];
+          RefreshIndicator(
+            onRefresh: fetchCourseSessions,
+            child: courseSessions != null
+                ? ListView.builder(
+                    itemCount: courseSessions?.data.length,
+                    itemBuilder: (context, index) {
+                      List<Datumm>? sessions = courseSessions?.data;
+                      var currentItem = sessions?[index];
 
-                          return Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
+                      return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
                               color: Colors.grey,
                               width: 1.0,
-                            ))),
-                            margin: const EdgeInsets.all(15.0),
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  currentItem!.course,
-                                  style: const TextStyle(fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Duration: ${currentItem.start} - ${currentItem.end}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Instructor: ${currentItem.instructor}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
                             ),
-                          );
-                        },
+                          ),
+                        ),
+                        margin: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              currentItem!.course,
+                              style: const TextStyle(fontSize: 18.0),
+                            ),
+                            const SizedBox(height: 10),
+                            GreyText(
+                                text:
+                                    "Duration: ${currentItem.start} - ${currentItem.end}"),
+                            const SizedBox(height: 10),
+                            GreyText(
+                                text: "Instructor: ${currentItem.instructor}"),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : isRefreshing
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: GlobalColors.mainColor,
+                        ),
+                      )
+                    : const Center(
+                        child: Text("No classes are currently running!"),
                       ),
-                    ),
-                  ],
-                )
-              : const Center(
-                  child: Text("No classes are currently running!"),
-                ),
-          // Placeholder for "Enrolls" tab content
-          studentCourses != null
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: studentCourses?.data.length,
-                        itemBuilder: (context, index) {
-                          List<Datummm>? enrolls = studentCourses?.data;
-                          var currentItem = enrolls?[index];
+          ),
+          // Placeholder for "My Courses" tab content
+          RefreshIndicator(
+            onRefresh: fetchStudentCourses,
+            child: studentCourses != null
+                ? ListView.builder(
+                    itemCount: studentCourses?.data.length,
+                    itemBuilder: (context, index) {
+                      List<Datummm>? enrolls = studentCourses?.data;
+                      var currentItem = enrolls?[index];
 
-                          return Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
+                      return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
                               color: Colors.grey,
                               width: 1.0,
-                            ))),
-                            margin: const EdgeInsets.all(15.0),
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  currentItem!.course,
-                                  style: const TextStyle(fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Course Code: ${currentItem.courseCode}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Semester: ${currentItem.semester}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
                             ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                )
-              : const Center(child: Text("You don't have any courses!")),
+                          ),
+                        ),
+                        margin: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              currentItem!.course,
+                              style: const TextStyle(fontSize: 18.0),
+                            ),
+                            const SizedBox(height: 10),
+                            GreyText(
+                                text: "Course Code: ${currentItem.courseCode}"),
+                            const SizedBox(height: 10),
+                            GreyText(text: "Semester: ${currentItem.semester}"),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : isRefreshing
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: GlobalColors.mainColor,
+                        ),
+                      )
+                    : Center(child: Text("You don't have any courses!")),
+          ),
+          // Placeholder for "My Enrolls" tab content
+          RefreshIndicator(
+            onRefresh: fetchEnrollments,
+            child: enrollments != null
+                ? ListView.builder(
+                    itemCount: enrollments?.data.length,
+                    itemBuilder: (context, index) {
+                      List<Datummmm>? enrolls = enrollments?.data;
+                      var currentItem = enrolls?[index];
 
-          enrollments != null
-              ? Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: enrollments?.data.length,
-                        itemBuilder: (context, index) {
-                          List<Datummmm>? enrolls = enrollments?.data;
-                          var currentItem = enrolls?[index];
-
-                          return Container(
-                            decoration: const BoxDecoration(
-                                border: Border(
-                                    bottom: BorderSide(
+                      return Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
                               color: Colors.grey,
                               width: 1.0,
-                            ))),
-                            margin: const EdgeInsets.all(15.0),
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  currentItem!.courseSessionName,
-                                  style: const TextStyle(fontSize: 18.0),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Duration: ${currentItem.startDate} - ${currentItem.endDate}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Instructor: ${currentItem.instructorName}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  "Semester: ${currentItem.semester}",
-                                  style: const TextStyle(color: Colors.grey),
-                                ),
-                              ],
                             ),
-                          );
-                        },
+                          ),
+                        ),
+                        margin: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              currentItem!.courseSessionName,
+                              style: const TextStyle(fontSize: 18.0),
+                            ),
+                            const SizedBox(height: 10),
+                            GreyText(
+                                text:
+                                    "Duration: ${currentItem.startDate} - ${currentItem.endDate}"),
+                            const SizedBox(height: 10),
+                            GreyText(
+                                text:
+                                    "Instructor: ${currentItem.instructorName}"),
+                            const SizedBox(height: 10),
+                            GreyText(text: "Semester: ${currentItem.semester}"),
+                          ],
+                        ),
+                      );
+                    },
+                  )
+                : isRefreshing
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: GlobalColors.mainColor,
+                        ),
+                      )
+                    : const Center(
+                        child: Text("You haven't enrolled in any courses!"),
                       ),
-                    ),
-                  ],
-                )
-              : const Center(
-                  child: Text("You haven't enrolled in any courses!")),
+          ),
         ],
       ),
     );
