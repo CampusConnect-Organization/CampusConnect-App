@@ -5,6 +5,7 @@ class ApiConstants {
   static String profileEndpoint = "api/student-profile/";
   static String coursesEndpoint = "api/courses/courses/";
   static String courseSessionsEndpoint = "api/courses/sessions/";
+  static String studentCoursesEndpoint = "api/courses/student-courses/";
   static String courseEnrollmentsEndpoint = "api/courses/enrollments/";
 }
 

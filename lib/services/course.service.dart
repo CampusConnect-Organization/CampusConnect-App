@@ -1,5 +1,6 @@
 import 'dart:developer';
-import 'package:campus_connect_app/models/course.enrollment.model.dart';
+import 'package:campus_connect_app/models/course.enrollments.model.dart';
+import 'package:campus_connect_app/models/student.courses.model.dart';
 import 'package:campus_connect_app/models/courses.model.dart';
 import 'package:campus_connect_app/models/course.session.model.dart';
 import 'package:campus_connect_app/models/error.model.dart';
@@ -33,11 +34,11 @@ class CourseAPIService {
     }
   }
 
-  Future<dynamic> getEnrollments() async {
+  Future<dynamic> getStudentCourses() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      var url = Uri.parse(
-          ApiConstants.baseUrl + ApiConstants.courseEnrollmentsEndpoint);
+      var url =
+          Uri.parse(ApiConstants.baseUrl + ApiConstants.studentCoursesEndpoint);
       Object? accessToken = prefs.get("accessToken");
       if (accessToken == null) {
         Get.off(() => const LoginView());
@@ -45,9 +46,8 @@ class CourseAPIService {
       var response = await http
           .get(url, headers: {"Authorization": "Bearer $accessToken"});
       if (response.statusCode == 200) {
-        CourseEnrollments enrollments =
-            courseEnrollmentsFromJson(response.body);
-        return enrollments;
+        StudentCourses studentCourses = studentCoursesFromJson(response.body);
+        return studentCourses;
       } else {
         Errors errors = errorsFromJson(response.body);
         return errors;
@@ -72,6 +72,30 @@ class CourseAPIService {
       if (response.statusCode == 200) {
         CourseSessions courseSession = courseSessionFromJson(response.body);
         return courseSession;
+      } else {
+        Errors errors = errorsFromJson(response.body);
+        return errors;
+      }
+    } catch (error) {
+      log(error.toString());
+    }
+  }
+
+  Future<dynamic> getCourseEnrollments() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var url = Uri.parse(
+          ApiConstants.baseUrl + ApiConstants.courseEnrollmentsEndpoint);
+      Object? accessToken = prefs.get("accessToken");
+      if (accessToken == null) {
+        Get.off(() => const LoginView());
+      }
+      var response = await http
+          .get(url, headers: {"Authorization": "Bearer $accessToken"});
+      if (response.statusCode == 200) {
+        CourseEnrollments enrollments =
+            courseEnrollmentsFromJson(response.body);
+        return enrollments;
       } else {
         Errors errors = errorsFromJson(response.body);
         return errors;

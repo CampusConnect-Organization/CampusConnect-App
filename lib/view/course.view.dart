@@ -1,4 +1,5 @@
-import 'package:campus_connect_app/models/course.enrollment.model.dart';
+import 'package:campus_connect_app/models/course.enrollments.model.dart';
+import 'package:campus_connect_app/models/student.courses.model.dart';
 import 'package:campus_connect_app/models/course.session.model.dart';
 import 'package:campus_connect_app/models/courses.model.dart';
 import 'package:campus_connect_app/models/error.model.dart';
@@ -20,6 +21,7 @@ class _CourseViewState extends State<CourseView>
   late final Errors errors;
   Courses? courses;
   CourseSessions? courseSessions;
+  StudentCourses? studentCourses;
   CourseEnrollments? enrollments;
   late TabController _tabController;
 
@@ -28,8 +30,9 @@ class _CourseViewState extends State<CourseView>
     super.initState();
     fetchCourses();
     fetchCourseSessions();
-    fetchCourseEnrollments();
-    _tabController = TabController(length: 3, vsync: this);
+    fetchStudentCourses();
+    fetchEnrollments();
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -49,6 +52,17 @@ class _CourseViewState extends State<CourseView>
     }
   }
 
+  Future<dynamic> fetchEnrollments() async {
+    dynamic data = await CourseAPIService().getCourseEnrollments();
+    if (data is CourseEnrollments) {
+      setState(() {
+        enrollments = data;
+      });
+    } else if (data is Errors) {
+      errors = data;
+    }
+  }
+
   Future<dynamic> fetchCourseSessions() async {
     dynamic data = await CourseAPIService().getCourseSessions();
     if (data is CourseSessions) {
@@ -60,11 +74,11 @@ class _CourseViewState extends State<CourseView>
     }
   }
 
-  Future<dynamic> fetchCourseEnrollments() async {
-    dynamic data = await CourseAPIService().getEnrollments();
-    if (data is CourseEnrollments) {
+  Future<dynamic> fetchStudentCourses() async {
+    dynamic data = await CourseAPIService().getStudentCourses();
+    if (data is StudentCourses) {
       setState(() {
-        enrollments = data;
+        studentCourses = data;
       });
     } else if (data is Errors) {
       errors = data;
@@ -120,7 +134,8 @@ class _CourseViewState extends State<CourseView>
             tabs: const [
               Tab(text: 'Courses'),
               Tab(text: 'Classes'),
-              Tab(text: 'My Enrolls'),
+              Tab(text: 'My Courses'),
+              Tab(text: "My Enrolls")
             ],
           ),
         ),
@@ -190,7 +205,7 @@ class _CourseViewState extends State<CourseView>
                                   height: 10,
                                 ),
                                 Text(
-                                  "Duration: ${currentItem.start}-${currentItem.end}",
+                                  "Duration: ${currentItem.start} - ${currentItem.end}",
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                                 const SizedBox(
@@ -212,14 +227,14 @@ class _CourseViewState extends State<CourseView>
                   child: Text("No classes are currently running!"),
                 ),
           // Placeholder for "Enrolls" tab content
-          enrollments != null
+          studentCourses != null
               ? Column(
                   children: [
                     Expanded(
                       child: ListView.builder(
-                        itemCount: enrollments?.data.length,
+                        itemCount: studentCourses?.data.length,
                         itemBuilder: (context, index) {
-                          List<Datummm>? enrolls = enrollments?.data;
+                          List<Datummm>? enrolls = studentCourses?.data;
                           var currentItem = enrolls?[index];
 
                           return Container(
@@ -242,6 +257,62 @@ class _CourseViewState extends State<CourseView>
                                 ),
                                 Text(
                                   "Course Code: ${currentItem.courseCode}",
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Semester: ${currentItem.semester}",
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              : const Center(child: Text("You don't have any courses!")),
+
+          enrollments != null
+              ? Column(
+                  children: [
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: enrollments?.data.length,
+                        itemBuilder: (context, index) {
+                          List<Datummmm>? enrolls = enrollments?.data;
+                          var currentItem = enrolls?[index];
+
+                          return Container(
+                            decoration: const BoxDecoration(
+                                border: Border(
+                                    bottom: BorderSide(
+                              color: Colors.grey,
+                              width: 1.0,
+                            ))),
+                            margin: const EdgeInsets.all(15.0),
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: [
+                                Text(
+                                  currentItem!.courseSessionName,
+                                  style: const TextStyle(fontSize: 18.0),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Duration: ${currentItem.startDate} - ${currentItem.endDate}",
+                                  style: const TextStyle(color: Colors.grey),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Instructor: ${currentItem.instructorName}",
                                   style: const TextStyle(color: Colors.grey),
                                 ),
                                 const SizedBox(

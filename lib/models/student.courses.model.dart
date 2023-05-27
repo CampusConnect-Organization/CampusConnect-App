@@ -4,25 +4,23 @@
 
 import 'dart:convert';
 
-CourseEnrollments courseEnrollmentsFromJson(String str) =>
-    CourseEnrollments.fromJson(json.decode(str));
+StudentCourses studentCoursesFromJson(String str) =>
+    StudentCourses.fromJson(json.decode(str));
 
-String courseEnrollmentsToJson(CourseEnrollments data) =>
-    json.encode(data.toJson());
+String studentCoursesToJson(StudentCourses data) => json.encode(data.toJson());
 
-class CourseEnrollments {
+class StudentCourses {
   bool success;
   List<Datummm> data;
   String message;
 
-  CourseEnrollments({
+  StudentCourses({
     required this.success,
     required this.data,
     required this.message,
   });
 
-  factory CourseEnrollments.fromJson(Map<String, dynamic> json) =>
-      CourseEnrollments(
+  factory StudentCourses.fromJson(Map<String, dynamic> json) => StudentCourses(
         success: json["success"],
         data: List<Datummm>.from(json["data"].map((x) => Datummm.fromJson(x))),
         message: json["message"],
