@@ -41,6 +41,7 @@ class ProfileAPIService {
       String lastName,
       String academics,
       String semester,
+      String symbolNumber,
       File? imageFile) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -63,6 +64,7 @@ class ProfileAPIService {
         "first_name": firstName,
         "last_name": lastName,
         "semester": semester,
+        "symbol_number": symbolNumber,
       };
 
       request.fields["data"] = json.encode(body);

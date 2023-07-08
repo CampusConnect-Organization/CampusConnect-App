@@ -51,6 +51,7 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController academicsController = TextEditingController();
+  final TextEditingController symbolNumberController = TextEditingController();
 
   @override
   void dispose() {
@@ -61,6 +62,7 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
     dateController.dispose();
     addressController.dispose();
     academicsController.dispose();
+    symbolNumberController.dispose();
     super.dispose();
   }
 
@@ -149,6 +151,16 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
                   textInputType: TextInputType.number,
                   obscure: false,
                   labelText: "Phone Number",
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormGlobal(
+                  controller: symbolNumberController,
+                  text: "Enter your symbol number",
+                  textInputType: TextInputType.number,
+                  obscure: false,
+                  labelText: "Symbol Number",
                 ),
                 const SizedBox(
                   height: 20,
@@ -256,6 +268,7 @@ class ProfileCreateViewState extends State<ProfileCreateView> {
                           lastNameController.text,
                           academicsController.text,
                           selectedSemester!,
+                          symbolNumberController.text,
                           image!,
                         );
 

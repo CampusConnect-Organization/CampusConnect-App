@@ -11,6 +11,7 @@ import 'package:campus_connect_app/view/calendar.view.dart';
 import 'package:campus_connect_app/view/course.view.dart';
 import 'package:campus_connect_app/view/exam.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
+import 'package:campus_connect_app/view/result.view.dart';
 import 'package:campus_connect_app/widgets/profile.widget.dart';
 import 'package:flutter/services.dart';
 import 'package:campus_connect_app/view/profile.view.dart';
@@ -108,7 +109,11 @@ class HomeViewState extends State<HomeView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          getExpanded("grade", "Grades", "View Grades", null),
+                          getExpanded(
+                              "grade", "Results", "View Final Exam Results",
+                              () {
+                            Get.to(() => const ResultView());
+                          }),
                           getExpanded("exam", "Exams", "View Exams", () {
                             Get.to(() => const ExamView());
                           }),
