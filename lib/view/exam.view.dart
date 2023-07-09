@@ -2,7 +2,7 @@ import 'package:campus_connect_app/widgets/greyText.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:campus_connect_app/models/error.model.dart';
-import 'package:campus_connect_app/models/exam.model.dart';
+import 'package:campus_connect_app/models/exams/exam.model.dart';
 import 'package:campus_connect_app/services/exam.service.dart';
 import 'package:campus_connect_app/utils/constants.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';

@@ -1,6 +1,6 @@
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:http/http.dart' as http;
-import 'package:campus_connect_app/models/result.models.dart';
+import 'package:campus_connect_app/models/exams/result.models.dart';
 import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/utils/constants.dart';
 import 'package:get/get.dart';

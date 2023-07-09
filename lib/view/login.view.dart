@@ -1,6 +1,6 @@
 // ignore_for_file: avoid_print
 
-import 'package:campus_connect_app/models/authentication.models.dart';
+import 'package:campus_connect_app/models/auth/authentication.models.dart';
 import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/utils/global.colors.dart';
 import 'package:campus_connect_app/view/home.view.dart';

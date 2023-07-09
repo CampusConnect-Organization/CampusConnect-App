@@ -10,6 +10,7 @@ import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/calendar.view.dart';
 import 'package:campus_connect_app/view/course.view.dart';
 import 'package:campus_connect_app/view/exam.view.dart';
+import 'package:campus_connect_app/view/library.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:campus_connect_app/view/result.view.dart';
 import 'package:campus_connect_app/widgets/profile.widget.dart';
@@ -124,8 +125,10 @@ class HomeViewState extends State<HomeView> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          getExpanded(
-                              "library", "Library", "Access Library", null),
+                          getExpanded("library", "Library", "Access Library",
+                              () {
+                            Get.to(() => const LibraryView());
+                          }),
                           getExpanded("calendar", "Calendar", "View Calendar",
                               () {
                             Get.to(() => const CalendarView());

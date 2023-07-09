@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:campus_connect_app/models/error.model.dart';
-import 'package:campus_connect_app/models/exam.model.dart';
+import 'package:campus_connect_app/models/exams/exam.model.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;

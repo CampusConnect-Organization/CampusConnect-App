@@ -1,5 +1,5 @@
 import 'package:campus_connect_app/models/error.model.dart';
-import 'package:campus_connect_app/models/result.models.dart';
+import 'package:campus_connect_app/models/exams/result.models.dart';
 import 'package:campus_connect_app/services/result.service.dart';
 import 'package:campus_connect_app/view/home.view.dart';
 import 'package:get/get.dart';

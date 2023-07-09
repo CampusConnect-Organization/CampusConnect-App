@@ -1,4 +1,4 @@
-import 'package:campus_connect_app/models/authentication.models.dart';
+import 'package:campus_connect_app/models/auth/authentication.models.dart';
 import 'package:campus_connect_app/services/register.service.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:campus_connect_app/view/login.view.dart';

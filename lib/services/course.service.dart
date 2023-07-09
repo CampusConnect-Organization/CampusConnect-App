@@ -1,8 +1,8 @@
 import 'dart:developer';
-import 'package:campus_connect_app/models/course.enrollments.model.dart';
-import 'package:campus_connect_app/models/student.courses.model.dart';
-import 'package:campus_connect_app/models/courses.model.dart';
-import 'package:campus_connect_app/models/course.session.model.dart';
+import 'package:campus_connect_app/models/courses/course.enrollments.model.dart';
+import 'package:campus_connect_app/models/courses/student.courses.model.dart';
+import 'package:campus_connect_app/models/courses/courses.model.dart';
+import 'package:campus_connect_app/models/courses/course.session.model.dart';
 import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/utils/constants.dart';
 import 'package:campus_connect_app/view/login.view.dart';

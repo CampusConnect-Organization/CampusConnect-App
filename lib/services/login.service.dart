@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 import 'package:http/http.dart' as http;
-import 'package:campus_connect_app/models/authentication.models.dart';
+import 'package:campus_connect_app/models/auth/authentication.models.dart';
 import 'package:campus_connect_app/models/error.model.dart';
 import 'package:campus_connect_app/utils/constants.dart';
 

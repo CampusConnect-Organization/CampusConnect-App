@@ -11,6 +11,12 @@ class ApiConstants {
   static String courseEnrollmentsEndpoint = "api/courses/enrollments/";
   static String examsEndpoint = "api/grades/exams/";
   static String resultsEndpoint = "api/results/";
+  static String booksEndpoint = "api/library/books/";
+  static String bookInstancesEndpoint = "api/library/book-instances/";
+  static String borrowsEndpoint = "api/library/borrows/";
+  static String borrowBookEndpoint = "api/library/borrow-book/";
+  static String returnsEndpoint = "api/library/returns/";
+  static String returnBookEndpoint = "api/library/return-book/";
 }
 
 String titleCase(String input) {
