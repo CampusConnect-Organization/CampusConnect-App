@@ -14,6 +14,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:campus_connect_app/utils/snackbar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../services/register.service.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
 
@@ -44,9 +46,9 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   const Center(
                     child: Image(
-                      image: AssetImage("images/logo.png"),
-                      height: 100,
-                      width: 100,
+                      image: AssetImage("images/logo-dark.png"),
+                      height: 150,
+                      width: 150,
                     ),
                   ),
                   Container(
@@ -114,6 +116,7 @@ class _LoginViewState extends State<LoginView> {
                                 "refreshToken", model.data.refreshToken);
                             Get.off(() => const HomeView());
                             generateSuccessSnackbar("Success", model.message);
+                            await RegisterAPIService().registerFCMDevice();
                           }
                         } else if (result is Errors) {
                           errors = result;

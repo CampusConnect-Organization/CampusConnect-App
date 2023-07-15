@@ -45,8 +45,8 @@ class _SplashViewState extends State<SplashView> {
             children: [
               Image(
                 image: AssetImage("images/logo.png"),
-                height: 150,
-                width: 150,
+                height: 200,
+                width: 200,
               ),
               Text(
                 "CampusConnect",
