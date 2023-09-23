@@ -40,7 +40,7 @@ class _LoginViewState extends State<LoginView> {
             width: double.infinity,
             padding: const EdgeInsets.all(15.0),
             child: Container(
-              padding: const EdgeInsets.only(top: 200),
+              padding: const EdgeInsets.only(top: 120),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -56,56 +56,52 @@ class _LoginViewState extends State<LoginView> {
                     child: Text(
                       "CampusConnect",
                       style: TextStyle(
-                        color: GlobalColors.mainColor,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
+                          color: GlobalColors.mainColor,
+                          fontSize: 30,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   Center(
                     child: Text(
                       "Login to your account",
                       style: TextStyle(
-                        color: GlobalColors.textColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                          color: GlobalColors.textColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500),
                     ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  // Email Address
                   TextFormGlobal(
                     controller: usernameController,
                     obscure: false,
                     labelText: "Username",
-                    text: 'Username',
+                    text: "Username",
                     textInputType: TextInputType.text,
                   ),
-                  //// Password Field
                   const SizedBox(
                     height: 20,
                   ),
                   TextFormGlobal(
                     controller: passwordController,
                     obscure: true,
-                    text: 'Password',
                     labelText: "Password",
+                    text: "Password",
                     textInputType: TextInputType.text,
                   ),
                   const SizedBox(
                     height: 30,
                   ),
                   ButtonGlobal(
-                    text: 'Login',
+                    text: "Login",
                     onTap: () async {
                       try {
-                        dynamic result = (await LoginAPIService().login(
-                          usernameController.text,
-                          passwordController.text,
-                        ))!;
+                        dynamic result = await LoginAPIService().login(
+                            usernameController.text, passwordController.text);
                         if (result is Authentication) {
                           model = result;
                           if (model.success) {
@@ -123,13 +119,12 @@ class _LoginViewState extends State<LoginView> {
                           generateErrorSnackbar("Error", errors.message);
                           passwordController.text = "";
                         } else {
-                          // Show an error dialog
                           generateErrorSnackbar(
-                              "Error", "An unspecified error occurred!");
+                              "Error", "Something went wrong!");
                         }
                       } catch (e) {
                         generateErrorSnackbar(
-                            "Error", "An unspecified error occurred");
+                            "Error", "An unspecified error occurred!");
                       }
                     },
                   ),
@@ -162,3 +157,4 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 }
+

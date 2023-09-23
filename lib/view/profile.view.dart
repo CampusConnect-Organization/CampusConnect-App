@@ -233,10 +233,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ? CircularProgressIndicator(
                         color: GlobalColors.mainColor,
                       )
-                    : const Text(
-                        'Failed to fetch profile data.',
-                        style: TextStyle(color: Colors.red),
-                      ),
+                    : CircularProgressIndicator(
+                        color: GlobalColors.mainColor,
+                      )
               ),
       ),
     );
