@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:campus_connect_app/models/success.model.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:http/http.dart' as http;
 import 'package:campus_connect_app/models/profile.model.dart';
@@ -79,6 +80,32 @@ class ProfileAPIService {
       }
     } catch (e) {
       log(e.toString());
+    }
+  }
+
+  Future<dynamic> updateProfilePicture(File imageFile) async {
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      var url = Uri.parse(ApiConstants.baseUrl + ApiConstants.profileEndpoint);
+      Object? accessToken = prefs.get("accessToken");
+      if (accessToken == null) {
+        Get.off(() => const LoginView());
+      }
+      var request = http.MultipartRequest("PUT", url);
+      String filename = imageFile.path.split("/").last;
+      request.files.add(await http.MultipartFile.fromPath('profile_picture', imageFile.path, filename: filename),);
+      request.headers["Authorization"] = "Bearer $accessToken";
+      var response = await request.send();
+      var responseBody = await response.stream.bytesToString();
+      if(response.statusCode == 200){
+        Success model = successFromJson(responseBody);
+        return model;
+      }else{
+        Errors error = errorsFromJson(responseBody);
+        return error;
+      }
+    }catch(e){
+      rethrow;
     }
   }
 }
