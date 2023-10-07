@@ -1,6 +1,4 @@
-// ignore_for_file: unused_field
-
-import 'dart:async';
+import 'dart:io';
 
 import 'package:campus_connect_app/models/profile.model.dart';
 import 'package:campus_connect_app/services/profile.service.dart';
@@ -10,6 +8,7 @@ import 'package:campus_connect_app/view/home.view.dart';
 import 'package:campus_connect_app/view/login.view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart'; // Import the image_picker package
 
 class UserProfileView extends StatefulWidget {
   const UserProfileView({Key? key}) : super(key: key);
@@ -22,6 +21,9 @@ class _UserProfileViewState extends State<UserProfileView> {
   Profile? _profile;
   bool _isRefreshing = false;
 
+  // Define an instance of ImagePicker
+  final ImagePicker _imagePicker = ImagePicker();
+  
   @override
   void initState() {
     super.initState();
@@ -49,6 +51,18 @@ class _UserProfileViewState extends State<UserProfileView> {
     setState(() {
       _isRefreshing = false;
     });
+  }
+
+  // Function to open the image picker
+  Future<void> _pickProfilePicture() async {
+    final pickedFile = await _imagePicker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      // If the user picked an image, update the profile picture
+      File imageFile = File(pickedFile.path);
+      await ProfileAPIService().updateProfilePicture(imageFile);
+      await _refreshProfile();
+    }
   }
 
   @override
@@ -86,32 +100,37 @@ class _UserProfileViewState extends State<UserProfileView> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Stack(children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: NetworkImage(ApiConstants.baseUrl +
-                                _profile!.data.profilePicture!),
+                        GestureDetector(
+                          onTap: _pickProfilePicture, // Call the image picker function
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 50,
+                                backgroundImage: NetworkImage(ApiConstants.baseUrl +
+                                    _profile!.data.profilePicture!),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(30),
+                                    color: Colors.white,
+                                  ),
+                                  child: Icon(
+                                    _profile!.data.isVerified
+                                        ? Icons.check_circle
+                                        : Icons.close,
+                                    color: _profile!.data.isVerified
+                                        ? Colors.green
+                                        : Colors.red,
+                                    size: 30,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                color: Colors.white,
-                              ),
-                              child: Icon(
-                                _profile!.data.isVerified
-                                    ? Icons.check_circle
-                                    : Icons.close,
-                                color: _profile!.data.isVerified
-                                    ? Colors.green
-                                    : Colors.red,
-                                size: 30,
-                              ),
-                            ),
-                          )
-                        ]),
+                        ),
                         const SizedBox(height: 20),
                         Text(
                           _profile!.data.fullName,
@@ -233,10 +252,9 @@ class _UserProfileViewState extends State<UserProfileView> {
                     ? CircularProgressIndicator(
                         color: GlobalColors.mainColor,
                       )
-                    : const Text(
-                        'Failed to fetch profile data.',
-                        style: TextStyle(color: Colors.red),
-                      ),
+                    : CircularProgressIndicator(
+                        color: GlobalColors.mainColor,
+                      )
               ),
       ),
     );

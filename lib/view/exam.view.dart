@@ -1,3 +1,4 @@
+import 'package:campus_connect_app/view/notification.view.dart';
 import 'package:campus_connect_app/widgets/greyText.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -63,10 +64,10 @@ class _ExamViewState extends State<ExamView> {
             Get.off(() => const HomeView());
           },
         ),
-        actions: const [
+        actions: [
           IconButton(
-            onPressed: null,
-            icon: Icon(
+            onPressed: () => Get.to(() => const NotificationView()), 
+            icon: const Icon(
               Icons.notifications,
               color: Colors.white,
             ),
